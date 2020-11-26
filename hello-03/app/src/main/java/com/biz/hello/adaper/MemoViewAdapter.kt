@@ -18,6 +18,10 @@ class MemoViewAdapter(var context: Context, var memoList : MutableList<MemoVO> )
     // 그리고 이 변수를 클래스 내에서 사용할때는 null값을 체크할 필요가 없어진다.
     // private var memoList : MutableList<MemoVO>
 
+    fun setList(memoList : MutableList<MemoVO>) {
+        this.memoList = memoList
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemoHolder {
 
         // layout/*.xml 파일을 읽어서 화면의

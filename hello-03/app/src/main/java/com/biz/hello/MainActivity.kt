@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtMemoInput : TextInputEditText
     private lateinit var btnSave : Button
     private lateinit var memoViewModel : MemoViewModel
+    private lateinit var memoAdapter : MemoViewAdapter
 
     /**
      * onCreate() method를 override하여 사용
@@ -81,18 +83,20 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        var memoList : MutableList<MemoVO> = mutableListOf()
+        memoAdapter = MemoViewAdapter(this,memoList)
         //=============================================
         // recyclerView와 데이터를 바인딩하는 코드
         //=============================================
         // 내용물이 없는 mutableList 선언 및 초기화, null 값이 되지 않도록 하기 위한 조치
 
         memoViewModel = ViewModelProvider(this).get(MemoViewModel::class.java)
-//        memoViewModel
-//        .selectAll()?.observe(this, {voListList->
-//                if()
-//
-//            })
-
+        memoViewModel.selectAll().observe(this,{ list ->
+            if(list != null) {
+                memoAdapter.setList(list)
+            }
+            memoAdapter.notifyDataSetChanged()
+        })
 
         /*
         for(i in 0..30) {
@@ -109,9 +113,9 @@ class MainActivity : AppCompatActivity() {
         }
         */
 
-        val memoAdaper : MemoViewAdapter = MemoViewAdapter(this,memoList)
+
         val rView : RecyclerView = findViewById(R.id.data_list_view)
-        rView.adapter = memoAdaper
+//        rView.adapter = memoAdaper
 
         val layoutManger = LinearLayoutManager(this)
         rView.layoutManager = layoutManger
@@ -122,3 +126,6 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+
+
+
