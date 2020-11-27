@@ -7,19 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.biz.hello.db.MemoRepository
 import com.biz.hello.model.MemoVO
 
-class MemoViewModel(app : Application) : ViewModel() {
-
+class MemoViewModel(app : Application) : AndroidViewModel(app) {
     private val memoRep : MemoRepository = MemoRepository(app)
-    private lateinit var memoList : LiveData<MutableList<MemoVO>>
-
-    init {
-        memoList = memoRep.selectAll()
-    }
     fun selectAll() : LiveData<MutableList<MemoVO>> {
-        return memoList;
+        return memoRep.selectAll()
     }
     fun insert(memoVO : MemoVO) {
         memoRep.insert(memoVO)
     }
-
 }

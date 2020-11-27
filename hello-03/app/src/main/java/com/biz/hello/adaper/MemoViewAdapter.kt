@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.biz.hello.R
 import com.biz.hello.model.MemoVO
 
-class MemoViewAdapter(var context: Context, var memoList : MutableList<MemoVO> ) :
+class MemoViewAdapter(var memoList : MutableList<MemoVO>) :
             RecyclerView.Adapter<MemoViewAdapter.MemoHolder?>() {
 
     // 생성자를 클래스 생성자(first Contructor)로 선언하면
@@ -17,7 +17,6 @@ class MemoViewAdapter(var context: Context, var memoList : MutableList<MemoVO> )
     // 자동으로 생성이 되기 때문에
     // 그리고 이 변수를 클래스 내에서 사용할때는 null값을 체크할 필요가 없어진다.
     // private var memoList : MutableList<MemoVO>
-
     fun setList(memoList : MutableList<MemoVO>) {
         this.memoList = memoList
     }
@@ -27,7 +26,7 @@ class MemoViewAdapter(var context: Context, var memoList : MutableList<MemoVO> )
         // layout/*.xml 파일을 읽어서 화면의
         // 일부 컴포넌트(View)에 부착하여 사용하기 위한 조치
         val view:View =  LayoutInflater
-                        .from(context)
+                        .from(parent.context)
                         .inflate(R.layout.memo_item,parent,false)
 
         // return new MemoHolder(view) : java

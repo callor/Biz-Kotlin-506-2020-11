@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
-    compileSdkVersion kotlin_version
+    compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
     defaultConfig {
@@ -44,10 +45,18 @@ dependencies {
     // compile group: 'androidx.room', name: 'room-runtime', version: '2.2.5'
     // implementation group: 'androidx.room', name: 'room-runtime', version: '2.2.5'
 
-    implementation 'androidx.room:room-runtime:2.2.5'
+    def room_version = "2.2.5"
 
-    def lifecycle_version = "2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    testImplementation "androidx.room:room-testing:$room_version"
+
+
+    // def lifecycle_version = "2.2.0"
+    // implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     // implementation group: 'androidx.lifecycle', name: 'lifecycle-extensions', version: '2.2.0'
 
     testImplementation 'junit:junit:4.+'

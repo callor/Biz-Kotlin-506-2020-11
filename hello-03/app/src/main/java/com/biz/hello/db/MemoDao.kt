@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.biz.hello.model.MemoVO
 
+@Dao
 interface MemoDao {
 
     @Query("SELECT * FROM tbl_memo ")
