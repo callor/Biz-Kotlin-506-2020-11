@@ -4,13 +4,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.biz.hello.R
 import com.biz.hello.model.MemoVO
 
-class MemoViewAdapter(var memoList : MutableList<MemoVO>) :
+class MemoViewAdapter(var memoList : MutableList<MemoVO>,
+                      var onDelete: (Any)->Unit,
+                        var onUpdate: (Any)->Unit ) :
             RecyclerView.Adapter<MemoViewAdapter.MemoHolder?>() {
+
+    // 매개변수로 받은 onDelete 메서드를 잠시 변수에 담아놓기
+     // private val onDeleteClick:(Any)->Unit = onDelete
 
     // 생성자를 클래스 생성자(first Contructor)로 선언하면
     // 별도로 private 변수를 선언하지 않는다.
@@ -42,6 +48,13 @@ class MemoViewAdapter(var memoList : MutableList<MemoVO>) :
         holder.txtDate.text = memoList[position]?.date.toString()
         holder.txtTime.text = memoList[position]?.time.toString()
         holder.txtMemo.text = memoList[position]?.memo.toString()
+
+        // 삭제버튼이 클릭되면 클릭이벤트를 발생시키고 그 이벤트를
+        // MainActivity로 전달하는 코드
+        val id : Long = memoList[position].id.toLong()
+        holder.btnDelete.setOnClickListener(View.OnClickListener { onDelete( id) })
+        holder.txtMemo.setOnClickListener(View.OnClickListener {onUpdate(id)})
+
     }
 
     override fun getItemCount(): Int {
@@ -53,6 +66,7 @@ class MemoViewAdapter(var memoList : MutableList<MemoVO>) :
         var txtDate : TextView = itemView.findViewById(R.id.txt_date)
         var txtTime : TextView = itemView.findViewById(R.id.txt_time)
         var txtMemo : TextView = itemView.findViewById(R.id.txt_memo_item)
+        var btnDelete : Button = itemView.findViewById(R.id.btn_memo_item_delete)
 
     }
 }

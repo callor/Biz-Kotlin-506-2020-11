@@ -53,7 +53,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:textSize="20sp"
-            android:text="저장"
+            android:text="추가"
             android:layout_height="match_parent"/>
     </LinearLayout>
     <!-- 글꼴의 크기 단위 dp, sp -->

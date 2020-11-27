@@ -16,6 +16,11 @@ class MemoRepository(app : Application) {
     fun selectAll() : LiveData<MutableList<MemoVO>> {
         return memoDao.selectAll()
     }
+
+    fun findById(id: Long) : MemoVO {
+        return memoDao.findById(id)
+    }
+
     fun insert(memoVO : MemoVO) {
         // MemoDatabase에 선언된 databaseWriterExcutor 메서드를
         // Thread 방식으로 호출하여 Insert를 수행하라
@@ -29,6 +34,10 @@ class MemoRepository(app : Application) {
 
     fun delete(memoVO : MemoVO) {
         memoDao.delete(memoVO.id)
+    }
+
+    fun delete(id : Long) {
+        memoDao.delete(id)
     }
 
 

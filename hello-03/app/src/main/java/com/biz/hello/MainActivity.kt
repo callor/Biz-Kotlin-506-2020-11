@@ -2,16 +2,20 @@ package com.biz.hello
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.biz.hello.adaper.MemoViewAdapter
 import com.biz.hello.adaper.MemoViewModel
 import com.biz.hello.model.MemoVO
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         // activity_main.xml 파일을 읽어서 화면을 그려라
         setContentView(R.layout.activity_main)
 
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+//        setSupportActionBar(toolbar)
+
         txtMemoInput = findViewById(R.id.txt_memo)
         btnSave = findViewById(R.id.btn_save)
         memoViewModel = MemoViewModel(this.application)
@@ -56,17 +63,17 @@ class MainActivity : AppCompatActivity() {
 
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
-
                     // Snackbar.make(view, text, Snackbar.LENGTH_LONG).show()
-                    val text: String = txtMemoInput.text.toString()
-                    val sd = SimpleDateFormat("yyyy-MM-dd")
-                    val st = SimpleDateFormat("HH:mm:ss")
-                    val date = Date(System.currentTimeMillis())
+                    // val text: String = txtMemoInput.text.toString()
+                    // val sd = SimpleDateFormat("yyyy-MM-dd")
+                    // val st = SimpleDateFormat("HH:mm:ss")
+                    // val date = Date(System.currentTimeMillis())
 
-                    val memoVO: MemoVO = MemoVO()
-                    memoViewModel.insert(memoVO)
+                    // val memoVO: MemoVO = MemoVO()
+                    // memoViewModel.insert(memoVO)
+
+                    this.memoInsert(view)
                     true
-
                 }
                 else -> false
             }
@@ -77,12 +84,14 @@ class MainActivity : AppCompatActivity() {
 
             val text: String = txtMemoInput.text.toString()
             // Snackbar.make(view,text,Snackbar.LENGTH_LONG).show()
-            Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-
+            // Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+            this.memoInsert(view)
         }
 
         var memoList: MutableList<MemoVO> = mutableListOf()
-        memoAdapter = MemoViewAdapter(memoList)
+        memoAdapter = MemoViewAdapter(memoList,
+                            {id-> memoViewModel.delete( id as Long )},
+                            {id->this.memoUpdate(id as Long) } )
         //=============================================
         // recyclerView와 데이터를 바인딩하는 코드
         //=============================================
@@ -104,32 +113,57 @@ class MainActivity : AppCompatActivity() {
             memoAdapter.notifyDataSetChanged()
         })
 
-        /*
-        for(i in 0..30) {
-            var memoVO : MemoVO = MemoVO()
-            memoVO.memo = i.toString()
-
-            val sd = SimpleDateFormat("yyyy-MM-dd")
-            val st = SimpleDateFormat("HH:mm:ss")
-            val date = Date(System.currentTimeMillis())
-
-            memoVO.date = sd.format(date).toString()
-            memoVO.time = st.format(date).toString()
-            memoList.add(memoVO)
-        }
-        */
-
-
         val rView: RecyclerView = findViewById(R.id.data_list_view)
-//        rView.adapter = memoAdaper
+        rView.adapter = memoAdapter
 
         val layoutManger = LinearLayoutManager(this)
         rView.layoutManager = layoutManger
-
-
     }
 
+    fun memoInsert( view : View) {
 
+        // Button Parent인 view 를 Button Down 형변환을 하여 Button속성을 쉽게 추출하여
+        // 사용할 수 있도록 한다.
+        val btn = view as Button
+
+        // 입력박스에 입력된 문자열 추출
+        val txtMemo = txtMemoInput.text.toString()
+        if(txtMemo.isEmpty()) {
+            Snackbar
+                .make(view,"메모를 입력한 후 저장을 수행하세요",Snackbar.LENGTH_LONG)
+                .show()
+            return
+        }
+
+        var memoVO = MemoVO()
+        if(btn.text == "변경") {
+            memoVO = btn.tag as MemoVO
+            memoVO.memo = txtMemo 
+        } else {
+            val sd = SimpleDateFormat("yyyy-MM-dd")
+            val st = SimpleDateFormat("HH:mm:ss")
+            val date = Date(System.currentTimeMillis())
+            memoVO.memo = txtMemo
+            memoVO.date = sd.format(date).toString()
+            memoVO.time = st.format(date).toString()
+        }
+        memoViewModel.insert(memoVO)
+
+        // 메모를 저장한 후 입력박스의 내용을 초기화 시키기
+        txtMemoInput.text = null
+        btnSave.text = "추가"
+    }
+
+    fun memoUpdate(id:Long) {
+        val memoVO : MemoVO = memoViewModel.findById(id);
+        // TextInput Box에서 값을 읽을때는
+        //  text = textbox.text
+        // 값을 써넣을때는 textbox.text = "값" 형식 안되고
+        // txtbox?.setText("값") 형식으로 사용해야 한다.
+        txtMemoInput?.setText(memoVO.memo as String)
+        btnSave.text = "변경"
+        btnSave.tag = memoVO
+    }
 }
 
 
