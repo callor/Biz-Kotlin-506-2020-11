@@ -104,6 +104,12 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> true
             R.id.action_login -> { // 햄버거 / 로그인메뉴 선택 시
+
+                /**
+                 * activity를 생성한 후 main에서 activity를 호출하여 화면을 불러오기
+                 * 명시적 Intent 호출
+                 * 사용자 생성 Intent 호출
+                 */
                 val loginIntent = Intent(this, LoginActivity::class.java)
 
                 // Intent를 호출할때 어떤 값을 전달하고 싶을때
@@ -116,6 +122,17 @@ class MainActivity : AppCompatActivity() {
                 val number : String = "tel:010-1111-1111"
 
                 // number 변수에 담긴 문자열을 기준으로 전화화면 띄우기
+                /**
+                 *
+                 * 암시적 Intent 호출
+                 * 만약 device에 전화걸기 어플이 다수 설치되어 있을때
+                 * 어플에서 전화걸기 Intent를 호출하면 device OS에 설정된 기본 어플을
+                 * 실행하여 전화걸기 화면을 보여주는 것
+                 * 전화걸기 어플이 무엇이 있던지 상관 없이 내가만 어플에서
+                 * 전화걸기를 수행할 수 있다.
+                 * 특정한 어플에 종속되는 것을 막아서 어플이 오류가 나는 것을 최소화하기 위한 것
+                 *
+                  */
                 val phoneDialIntent = Intent(Intent.ACTION_DIAL, Uri.parse(number))
                 val phoneCallButtonIntent = Intent(Intent.ACTION_CALL_BUTTON, Uri.parse(number))
 
@@ -123,6 +140,17 @@ class MainActivity : AppCompatActivity() {
                 val phoneCall_Intent = Intent(Intent.ACTION_CALL, Uri.parse(number))
 
                 startActivity(phoneDialIntent)
+                true
+            }
+            R.id.action_internet ->{
+
+                // 인터넷의 특정한 주소페이지를 열고자 할때
+                val naver = "https://callor.com"
+
+                // Uri부분을 생략하면 기본 browser가 열림
+                val internetIntent = Intent(Intent.ACTION_VIEW,Uri.parse(naver))
+
+                startActivity(internetIntent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

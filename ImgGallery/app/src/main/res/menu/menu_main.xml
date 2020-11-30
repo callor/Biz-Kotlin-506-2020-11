@@ -14,6 +14,12 @@
         android:title="@string/action_phone"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_internet"
+        android:orderInCategory="100"
+        android:title="@string/action_internet"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/action_settings"
